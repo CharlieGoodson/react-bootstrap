@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>BootstrapReactApp</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+  function Navbar(props) {
+
+    function change(page) {
+      props.change(page);
+    }
+    
+    return (
+        <nav className="navbar navbar-default">
+          <div className="container">
+            <div className="navbar-header">
+              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span className="sr-only">Toggle navigation</span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+              </button>
+              <div className="navbar-brand" href="#">{props.brand}</div>
+            </div>
+            <div id="navbar">
+              <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul className="nav navbar-nav">
+                <li className={(props.currentPage === 'home') ? 'active' : ''}><a onClick={change.bind(this, 'home')} href="#">Home</a></li>
+                <li className={(props.currentPage === 'about') ? 'active' : ''}><a onClick={change.bind(this, 'about')} href="#">About</a></li>
+                <li className={(props.currentPage === 'contact') ? 'active' : ''}><a onClick={change.bind(this, 'contact')} href="#">Contact</a></li>
+              </ul>
+              </div>
+            </div>
+          </div>
+        </nav>    
+    );
+  }
+
+  function Jumbotron(props) {
+    return (
+      <div className="jumbotron">
+        <div className="container">
+          <h1>{props.heading}</h1>
+          <p className="lead">{props.text}</p>
+          <p><a className="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+        </div>
+      </div>
+    );
+  }
+
+  function Page(props) {
+    
+    var pageContent;
+    if (props.currentPage === 'home') {
+      pageContent = 'This is home page';
+    } else if (props.currentPage === 'about') {
+      pageContent = 'This is about page';
+    } else if (props.currentPage === 'contact') {
+      pageContent = 'This is contact page';
+    } else {
+      pageContent = 'This is home page';
+    }
+
+    return (
+      <div className="container">
+        <h2>{props.currentPage.charAt(0).toUpperCase() + props.currentPage.slice(1)}</h2>
+        {pageContent}
+      </div>    
+    );
+  }
+
+  class Theme extends React.Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {currentPage: 'home'};
+      this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(page) {
+      this.setState({currentPage: page});
+    }
+
+    render() {
+      var jumbotron;
+
+      if (this.state.currentPage === 'home') {
+        jumbotron = <Jumbotron heading={this.props.heading} text={this.props.text} />
+      } else {
+        jumbotron = '';
+      }
+
+      return (
+        <div>
+          <Navbar currentPage={this.state.currentPage} brand={this.props.brand} change={this.handleChange} />
+          {jumbotron}
+          <Page currentPage={this.state.currentPage} />
+        </div>    
+      );
+    }
+  }
+  Theme.defaultProps = {
+      brand: 'BootstrapReactApp',
+      heading: 'Hello, World!',
+      text: 'This is a Bootstrap theme that uses React.js components'
+  }
+
+  ReactDOM.render(
+      <Theme />,
+      document.getElementById('root')
+  );
+
+  </script>
+</body>
+</html>
